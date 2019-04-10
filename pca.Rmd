@@ -18,7 +18,7 @@ library("tidyverse")
 
 # Theory
 
-* $X\in\mathbb{R}^{n\times p}$ is a column-centered data matrix with $n$ samples in the rows and $p$ features in the columns.
+* Let $X\in\mathbb{R}^{n\times p}$ be a **column-centered** data matrix with $n$ samples in the rows and $p$ features in the columns.
 * The covariance matrix of the features is given by \[C=\frac{X^\top X}{n-1} \in\mathbb{R}^{p\times p}.\]
 * Since $C$ is a real symmetric matrix, it can be diagonalized as \[C=VLV^\top\] where $L$ is a diagonal matrix of eigenvalues $\lambda_1,\ldots,\lambda_n$ and $V$ is an orthnormal matrix of eigenvectors, i.e. $V^\top V=\mathbb{I}_p$ and the $i$-th column $v_i$ of $V$ satisfies $Cv_i=\lambda_i v_i$.
 * The vectors $v_1,\ldots,v_n$ are called the *principal axes* or *principal directions* of the data.
@@ -34,9 +34,11 @@ We analyze the iris dataset with PCA and SVD using *R*'s `prcomp` and `svd` func
 ```{r, results="hold"}
 # load data matrix
 data <- as.matrix(iris[,1:4])
+n <- dim(data)[1]
+p <- dim(data)[2]
 
 # make sample (row) names
-X <- set_rownames(data, str_c("sample_",1:dim(data)[1]))
+X <- set_rownames(data, str_c("sample_",1:n))
 
 # center data, otherwise X'X/(n-1) is not the covariance matrix of the features 
 mu <-  colMeans(X)
@@ -67,9 +69,13 @@ all.equal(pca$rotation, sv$v, check.attributes=F)
 # projections of X onto principal axes
 all.equal(pca$x, X %*% pca$rotation)
 all.equal(pca$x , sv$u %*% diag(sv$d), check.attributes=F)
+
+# eigenvalues
+lambda <- eigen((X %*% t(X))/(n-1), symmetric=TRUE)$values
+all.equal(lambda[1:p], ( (sv$d)^2 / (n-1) )[1:p])
 ```
 
-## Low-rank reconstruction of $X$ from principal components
+## Low-rank reconstruction from principal components
 ```{r, results="hold"}
 # number of principal components to reconstruct from
 n_comp = 3

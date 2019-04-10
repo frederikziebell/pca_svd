@@ -199,7 +199,7 @@ $(document).ready(function () {
 <div id="theory" class="section level1">
 <h1>Theory</h1>
 <ul>
-<li><span class="math inline">\(X\in\mathbb{R}^{n\times p}\)</span> is a column-centered data matrix with <span class="math inline">\(n\)</span> samples in the rows and <span class="math inline">\(p\)</span> features in the columns.</li>
+<li>Let <span class="math inline">\(X\in\mathbb{R}^{n\times p}\)</span> be a <strong>column-centered</strong> data matrix with <span class="math inline">\(n\)</span> samples in the rows and <span class="math inline">\(p\)</span> features in the columns.</li>
 <li>The covariance matrix of the features is given by <span class="math display">\[C=\frac{X^\top X}{n-1} \in\mathbb{R}^{p\times p}.\]</span></li>
 <li>Since <span class="math inline">\(C\)</span> is a real symmetric matrix, it can be diagonalized as <span class="math display">\[C=VLV^\top\]</span> where <span class="math inline">\(L\)</span> is a diagonal matrix of eigenvalues <span class="math inline">\(\lambda_1,\ldots,\lambda_n\)</span> and <span class="math inline">\(V\)</span> is an orthnormal matrix of eigenvectors, i.e. <span class="math inline">\(V^\top V=\mathbb{I}_p\)</span> and the <span class="math inline">\(i\)</span>-th column <span class="math inline">\(v_i\)</span> of <span class="math inline">\(V\)</span> satisfies <span class="math inline">\(Cv_i=\lambda_i v_i\)</span>.</li>
 <li>The vectors <span class="math inline">\(v_1,\ldots,v_n\)</span> are called the <em>principal axes</em> or <em>principal directions</em> of the data.</li>
@@ -217,9 +217,11 @@ $(document).ready(function () {
 <p>We analyze the iris dataset with PCA and SVD using <em>R</em>’s <code>prcomp</code> and <code>svd</code> functions.</p>
 <pre class="r"><code># load data matrix
 data &lt;- as.matrix(iris[,1:4])
+n &lt;- dim(data)[1]
+p &lt;- dim(data)[2]
 
 # make sample (row) names
-X &lt;- set_rownames(data, str_c(&quot;sample_&quot;,1:dim(data)[1]))
+X &lt;- set_rownames(data, str_c(&quot;sample_&quot;,1:n))
 
 # center data, otherwise X'X/(n-1) is not the covariance matrix of the features 
 mu &lt;-  colMeans(X)
@@ -264,13 +266,18 @@ all.equal(pca$rotation, sv$v, check.attributes=F)
 
 # projections of X onto principal axes
 all.equal(pca$x, X %*% pca$rotation)
-all.equal(pca$x , sv$u %*% diag(sv$d), check.attributes=F)</code></pre>
+all.equal(pca$x , sv$u %*% diag(sv$d), check.attributes=F)
+
+# eigenvalues
+lambda &lt;- eigen((X %*% t(X))/(n-1), symmetric=TRUE)$values
+all.equal(lambda[1:p], ( (sv$d)^2 / (n-1) )[1:p])</code></pre>
 <pre><code>## [1] TRUE
+## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE</code></pre>
 </div>
-<div id="low-rank-reconstruction-of-x-from-principal" class="section level2">
-<h2>Low-rank reconstruction of <span class="math inline">\(X\)</span> from principal</h2>
+<div id="low-rank-reconstruction-from-principal-components" class="section level2">
+<h2>Low-rank reconstruction from principal components</h2>
 <pre class="r"><code># number of principal components to reconstruct from
 n_comp = 3
 # reconstruction of column-centered X
