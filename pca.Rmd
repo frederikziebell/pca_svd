@@ -1,0 +1,88 @@
+---
+title: "A Short Guide to Prinipal Component Analysis (PCA)"
+subtitle: "... and it's Relation to Singular Value Decomposition (SVD)"
+author: "Frederik Ziebell"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+suppressPackageStartupMessages({
+library("magrittr")
+library("tidyverse")
+})
+```
+
+# Theory
+
+* $X\in\mathbb{R}^{n\times p}$ is a column-centered data matrix with $n$ samples in the rows and $p$ features in the columns.
+* The covariance matrix of the features is given by \[C=\frac{X^\top X}{n-1} \in\mathbb{R}^{p\times p}.\]
+* Since $C$ is a real symmetric matrix, it can be diagonalized as \[C=VLV^\top\] where $L$ is a diagonal matrix of eigenvalues $\lambda_1,\ldots,\lambda_n$ and $V$ is an orthnormal matrix of eigenvectors, i.e. $V^\top V=\mathbb{I}_p$ and the $i$-th column $v_i$ of $V$ satisfies $Cv_i=\lambda_i v_i$.
+* The vectors $v_1,\ldots,v_n$ are called the *principal axes* or *principal directions* of the data.
+* Projections of the data onto the principal axes are called *principal components*.
+* Since the columns of $V$ have unit norm, the entry $(XV)_{ij}$ is the projection of the $i$-th sample (row) of $X$ onto the $j$-th principal axis (column) of $V$. Thus, the $i$-th row of $XV$ is the projection of the $i$-th sample on the principal axes and hence the coordinates of this sample in the new coordinate system given by the principal axes. The $j$-th column of $XV$ is the $j$-th principal component.
+* As for any matrix, there exits a *singular value decomposition* (SVD) \[X=UDV^\top\] where $D$ is a diagonal matrix of non-zero singular values. These are the square-roots of the eigenvalues of both $XX^\top$ and $X^\top X$. The $n\times n$ and $p\times p$ matrices $U$ and $V$ are unitary, i.e. $U=U^\top$ and $V=V^\top$. The columns of $U$ ($V$) are the left-singular (right-singular) vectors of $X$, i.e. the eigenvectors of $XX^\top$ ($X^\top X$).
+* It follows from the definition of the SVD that \[C=V\frac{D^2}{n-1}V^\top,\] which implies that the right-singular vectors $V$ are the principal axes, the eigenvalues $\lambda_i$ of $L$ and $d_i$ of $D$ are related via $\lambda_i=d_i^2/(n-1)$ and the principal components are given by $XV=UD$.
+* One can achieve a lower rank (rank $k$) approximation (reconstruction) of $X$ by multiplying the first $k$ principal components $(UD)_k$ with the first $k$ principal axes $V_k^\top$.
+
+# Practical Example
+## The data
+We analyze the iris dataset with PCA and SVD using *R*'s `prcomp` and `svd` functions.
+```{r, results="hold"}
+# load data matrix
+data <- as.matrix(iris[,1:4])
+
+# make sample (row) names
+X <- set_rownames(data, str_c("sample_",1:dim(data)[1]))
+
+# center data, otherwise X'X/(n-1) is not the covariance matrix of the features 
+mu <-  colMeans(X)
+X <- scale(X,center=T,scale=F)
+
+# do PCA and SVD
+pca <- prcomp(X)
+sv <- svd(X)
+
+head(X)
+```
+
+## Results of `prcomp`
+```{r}
+# principal axes
+head(pca$rotation)
+
+# projection of X onto principal axes
+head(pca$x)
+```
+
+
+## Compare `prcomp` and `svd`
+```{r, results="hold"}
+# principal axes (principal directions) 
+all.equal(pca$rotation, sv$v, check.attributes=F)
+
+# projections of X onto principal axes
+all.equal(pca$x, X %*% pca$rotation)
+all.equal(pca$x , sv$u %*% diag(sv$d), check.attributes=F)
+```
+
+## Low-rank reconstruction of $X$ from principal components
+```{r, results="hold"}
+# number of principal components to reconstruct from
+n_comp = 3
+# reconstruction of column-centered X
+X_reconstruct <-  pca$x[,1:n_comp] %*% t(pca$rotation[,1:n_comp])
+
+# add original column means to reconstruct original data
+data_reconstruct <-  scale(X_reconstruct, center = -mu, scale = FALSE)
+
+# check approximation error
+all.equal(X_reconstruct, X, check.attributes=F)
+all.equal(data_reconstruct, data, check.attributes=F)
+```
+
+# References
+[1] https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca
