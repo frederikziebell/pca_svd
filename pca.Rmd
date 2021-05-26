@@ -24,7 +24,7 @@ library("tidyverse")
 * The vectors $v_1,\ldots,v_n$ are called the *principal axes* or *principal directions* of the data.
 * Projections of the data onto the principal axes are called *principal components*.
 * Since the columns of $V$ have unit norm, the entry $(XV)_{ij}$ is the projection of the $i$-th sample (row) of $X$ onto the $j$-th principal axis (column) of $V$. Thus, the $i$-th row of $XV$ is the projection of the $i$-th sample on the principal axes and hence the coordinates of this sample in the new coordinate system given by the principal axes. The $j$-th column of $XV$ is the $j$-th principal component.
-* As for any matrix, there exits a *singular value decomposition* (SVD) \[X=UDV^\top\] where $D$ is a diagonal matrix of non-zero singular values. These are the square-roots of the eigenvalues of both $XX^\top$ and $X^\top X$. The $n\times n$ and $p\times p$ matrices $U$ and $V$ are unitary, i.e. $U=U^\top$ and $V=V^\top$. The columns of $U$ ($V$) are the left-singular (right-singular) vectors of $X$, i.e. the eigenvectors of $XX^\top$ ($X^\top X$).
+* As for any matrix, there exits a *singular value decomposition* (SVD) \[X=UDV^\top\] where $D$ is a diagonal matrix of non-zero singular values. These are the square-roots of the eigenvalues of both $XX^\top$ and $X^\top X$. The $n\times n$ and $p\times p$ matrices $U$ and $V$ are unitary, i.e. $U^\top U=\mathbb{I}$ and $V^\top V=\mathbb{I}$. The columns of $U$ (of $V$) are the left-singular (right-singular) vectors of $X$, i.e. the eigenvectors of $XX^\top$ (of $X^\top X$).
 * It follows from the definition of the SVD that \[C=V\frac{D^2}{n-1}V^\top,\] which implies that the right-singular vectors $V$ are the principal axes, the eigenvalues $\lambda_i$ of $L$ and $d_i$ of $D$ are related via $\lambda_i=d_i^2/(n-1)$ and the principal components are given by $XV=UD$.
 * One can achieve a lower rank (rank $k$) approximation (reconstruction) of $X$ by multiplying the first $k$ principal components $(UD)_k$ with the first $k$ principal axes $V_k^\top$.
 
@@ -86,7 +86,6 @@ X_reconstruct <-  pca$x[,1:n_comp] %*% t(pca$rotation[,1:n_comp])
 data_reconstruct <-  scale(X_reconstruct, center = -mu, scale = FALSE)
 
 # check approximation error
-all.equal(X_reconstruct, X, check.attributes=F)
 all.equal(data_reconstruct, data, check.attributes=F)
 ```
 
