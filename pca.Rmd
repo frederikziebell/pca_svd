@@ -89,5 +89,22 @@ data_reconstruct <-  scale(X_reconstruct, center = -mu, scale = FALSE)
 all.equal(data_reconstruct, data, check.attributes=F)
 ```
 
+## Loadings decompose variance by feature
+```{r, results="hold"}
+# 1D reconstruction of the data
+projections <- pca$x
+loadings <- pca$rotation
+X_reconstruct <- projections[,1,drop=F] %*% t(loadings[,1,drop=F])
+
+# feature-wise variances
+cv <- matrixStats::colVars(X_reconstruct, useNames = T)
+
+# relative proportions of feature-wise variances 
+# are the squares of the loadings
+all.equal( sum(cv) , (pca$sdev^2)[1] )
+all.equal( cv / sum(cv) , loadings[,1]^2 )
+```
+
+
 # References
 [1] https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca
