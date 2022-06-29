@@ -414,18 +414,24 @@ column of <span class="math inline">\(XV\)</span> is the <span class="math inlin
 decomposition</em> (SVD) <span class="math display">\[X=UDV^\top\]</span> where <span class="math inline">\(U\)</span> is a <span class="math inline">\(n\times n\)</span> orthonormal matrix, <span class="math inline">\(D\)</span> a <span class="math inline">\(n\times
 p\)</span> matrix with only non-zero values on the main diagonal, and
 <span class="math inline">\(V\)</span> is a <span class="math inline">\(p\times p\)</span> orthonormal matrix. The entries
-on the main diagonal of <span class="math inline">\(D\)</span> called
-singular values and are the square-roots of the eigenvalues of <span class="math inline">\(X^\top X\)</span> and <span class="math inline">\(XX^\top\)</span>. The columns of <span class="math inline">\(U\)</span> (of <span class="math inline">\(V\)</span>) are the left-singular (right-singular)
+on the main diagonal of <span class="math inline">\(D\)</span> are
+called singular values and are the square-roots of the eigenvalues of
+<span class="math inline">\(X^\top X\)</span> and <span class="math inline">\(XX^\top\)</span>. The columns of <span class="math inline">\(U\)</span> (of <span class="math inline">\(V\)</span>) are the left-singular (right-singular)
 vectors of <span class="math inline">\(X\)</span>, i.e. the eigenvectors
-of <span class="math inline">\(XX^\top\)</span> (of <span class="math inline">\(X^\top X\)</span>). It follows from the definition
-of the SVD that <span class="math display">\[C=V\frac{D^2}{n-1}V^\top,\]</span> which implies
+of <span class="math inline">\(XX^\top\)</span> (of <span class="math inline">\(X^\top X\)</span>).</p>
+<p>It follows from the definition of the SVD that <span class="math display">\[C=V\frac{D^2}{n-1}V^\top,\]</span> which implies
 that the right-singular vectors <span class="math inline">\(V\)</span>
-are the principal axes, the eigenvalues <span class="math inline">\(\lambda_i\)</span> of <span class="math inline">\(L\)</span> and <span class="math inline">\(d_i\)</span> of <span class="math inline">\(D\)</span> are related via <span class="math inline">\(\lambda_i=d_i^2/(n-1)\)</span> and the principal
+are the principal axes, the eigenvalues <span class="math inline">\(\lambda_i\)</span> and singular values <span class="math inline">\(d_i\)</span> are related via <span class="math inline">\(\lambda_i=d_i^2/(n-1)\)</span> and the principal
 components are given by <span class="math inline">\(XV=UD\)</span>. One
 can achieve a lower rank (rank <span class="math inline">\(k\)</span>)
 approximation of <span class="math inline">\(X\)</span> by multiplying
 the first <span class="math inline">\(k\)</span> principal components
 <span class="math inline">\((UD)_k\)</span> with the first <span class="math inline">\(k\)</span> principal axes <span class="math inline">\(V_k^\top\)</span>.</p>
+<p>If <span class="math inline">\(n&gt;p\)</span>, the last <span class="math inline">\(n-p\)</span> rows of <span class="math inline">\(D\)</span> are zero and thus the last <span class="math inline">\(n-p\)</span> columns of <span class="math inline">\(U\)</span> can be arbitrary and do not contribute
+to the factorization. In that case, a reduced SVD can be achived where
+<span class="math inline">\(D\)</span> is a <span class="math inline">\(p\times p\)</span> and <span class="math inline">\(U\)</span> a <span class="math inline">\(n\times
+p\)</span> matrix. Likewise, if <span class="math inline">\(n&lt;p\)</span>, a reduced SVD has <span class="math inline">\(D\)</span> as <span class="math inline">\(n\times
+n\)</span> matrix and <span class="math inline">\(V\)</span> as <span class="math inline">\(p\times n\)</span> matrix.</p>
 </div>
 <div id="variance-decomposition" class="section level3">
 <h3>Variance decomposition</h3>

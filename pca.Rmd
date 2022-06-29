@@ -3,7 +3,8 @@ title: "A Short Guide to Principal Component Analysis"
 author: "Frederik Ziebell"
 subtitle: '... and it''s Relation to Singular Value Decomposition'
 output:
-  html_document
+  md_document: default
+  html_document: default
 ---
 
 <style type="text/css">
