@@ -399,8 +399,9 @@ matrix of the features.</p>
 <h3>Principal axes and components</h3>
 <p>Since <span class="math inline">\(C\)</span> is a covariance matrix,
 it is positive semi-definite and can thus be diagonalized as <span class="math display">\[C=VLV^\top\]</span> where <span class="math inline">\(L\)</span> is a diagonal matrix of non-negative
-eigenvalues <span class="math inline">\(\lambda_1,\ldots,\lambda_n\)</span> and <span class="math inline">\(V\)</span> is an orthonormal matrix, i.e. <span class="math inline">\(V^\top V=\mathbb{1}_p\)</span>, of eigenvectors,
-i.e. the <span class="math inline">\(i\)</span>-th column <span class="math inline">\(v_i\)</span> of <span class="math inline">\(V\)</span> satisfies <span class="math inline">\(Cv_i=\lambda_i v_i\)</span>. The vectors <span class="math inline">\(v_1,\ldots,v_n\)</span> are called the
+eigenvalues <span class="math inline">\(\lambda_1,\ldots,\lambda_n\)</span> and <span class="math inline">\(V\)</span> is an orthonormal matrix of
+eigenvectors, i.e. <span class="math inline">\(V^\top
+V=\mathbb{1}_p\)</span> and the <span class="math inline">\(i\)</span>-th column <span class="math inline">\(v_i\)</span> of <span class="math inline">\(V\)</span> satisfies <span class="math inline">\(Cv_i=\lambda_i v_i\)</span>. The vectors <span class="math inline">\(v_1,\ldots,v_n\)</span> are called the
 <em>principal axes</em> or <em>principal directions</em> of the data.
 Projections of the data onto the principal axes are called <em>principal
 components</em>. Since the columns of <span class="math inline">\(V\)</span> have unit norm, the entry <span class="math inline">\((XV)_{ij}\)</span> is the projection of the <span class="math inline">\(i\)</span>-th sample (row) of <span class="math inline">\(X\)</span> onto the <span class="math inline">\(j\)</span>-th principal axis (column) of <span class="math inline">\(V\)</span>. Thus, the <span class="math inline">\(i\)</span>-th row of <span class="math inline">\(XV\)</span> is the projection of the <span class="math inline">\(i\)</span>-th sample on the principal axes and
@@ -420,18 +421,20 @@ called singular values and are the square-roots of the eigenvalues of
 vectors of <span class="math inline">\(X\)</span>, i.e. the eigenvectors
 of <span class="math inline">\(XX^\top\)</span> (of <span class="math inline">\(X^\top X\)</span>).</p>
 <p>It follows from the definition of the SVD that <span class="math display">\[C=V\frac{D^2}{n-1}V^\top,\]</span> which implies
-that the right-singular vectors <span class="math inline">\(V\)</span>
-are the principal axes, the eigenvalues <span class="math inline">\(\lambda_i\)</span> and singular values <span class="math inline">\(d_i\)</span> are related via <span class="math inline">\(\lambda_i=d_i^2/(n-1)\)</span> and the principal
-components are given by <span class="math inline">\(XV=UD\)</span>. One
-can achieve a lower rank (rank <span class="math inline">\(k\)</span>)
+that <span class="math inline">\(V\)</span> the columns of <span class="math inline">\(V\)</span> are the principal axes defined in the
+previous section. Moreover, <span class="math display">\[\lambda_i=d_i^2/(n-1)\]</span> and the principal
+components are given by <span class="math display">\[XV=UD.\]</span> One
+can achieve a low-rank (rank <span class="math inline">\(k\)</span>)
 approximation of <span class="math inline">\(X\)</span> by multiplying
 the first <span class="math inline">\(k\)</span> principal components
-<span class="math inline">\((UD)_k\)</span> with the first <span class="math inline">\(k\)</span> principal axes <span class="math inline">\(V_k^\top\)</span>.</p>
+<span class="math inline">\((UD)_k\)</span> with the first <span class="math inline">\(k\)</span> principal axes <span class="math inline">\(V_k^\top\)</span>. The approximation is optimal in
+the sense that it minimizes the Frobenius norm (sum of squared entries)
+of <span class="math inline">\(X - (UD)_k{V_k}^\top\)</span>.</p>
 <p>If <span class="math inline">\(n&gt;p\)</span>, the last <span class="math inline">\(n-p\)</span> rows of <span class="math inline">\(D\)</span> are zero and thus the last <span class="math inline">\(n-p\)</span> columns of <span class="math inline">\(U\)</span> can be arbitrary and do not contribute
-to the factorization. In that case, a reduced SVD can be achived where
-<span class="math inline">\(D\)</span> is a <span class="math inline">\(p\times p\)</span> and <span class="math inline">\(U\)</span> a <span class="math inline">\(n\times
+to the factorization of <span class="math inline">\(X\)</span>. In that
+case, a reduced SVD can be achived where <span class="math inline">\(D\)</span> is a <span class="math inline">\(p\times p\)</span> and <span class="math inline">\(U\)</span> a <span class="math inline">\(n\times
 p\)</span> matrix. Likewise, if <span class="math inline">\(n&lt;p\)</span>, a reduced SVD has <span class="math inline">\(D\)</span> as <span class="math inline">\(n\times
-n\)</span> matrix and <span class="math inline">\(V\)</span> as <span class="math inline">\(p\times n\)</span> matrix.</p>
+n\)</span> and <span class="math inline">\(V\)</span> as <span class="math inline">\(p\times n\)</span> matrix.</p>
 </div>
 <div id="variance-decomposition" class="section level3">
 <h3>Variance decomposition</h3>
@@ -452,7 +455,7 @@ decomposed by its singular values contained in <span class="math inline">\(D\)</
 decomposed onto the features: A rank <span class="math inline">\(1\)</span> approximation of <span class="math inline">\(X\)</span> from the first principal axis and
 component is given by the matrix <span class="math inline">\(\tilde
 X\)</span> with <span class="math display">\[\tilde X_{ij} =
-(UD)_{i1}V_{ji}=d_1U_{i1}V_{j1}.\]</span> The variance of feature <span class="math inline">\(j\)</span> satisfies <span class="math display">\[\mathrm{Var}\left(\tilde X_{.j}\right) =
+(UD)_{i1}V_{j1}=d_1U_{i1}V_{j1}.\]</span> The variance of feature <span class="math inline">\(j\)</span> satisfies <span class="math display">\[\mathrm{Var}\left(\tilde X_{.j}\right) =
 \frac{d_1^2}{n-1}(V_{j1})^2.\]</span> Together with the fact that <span class="math inline">\(\sum_{j=1}^p (V_{j1})^2\)</span>, it implies that
 the squared entries of the principal axis vector contain the fraction of
 variance that is explained by the respective feature.</p>
@@ -471,7 +474,6 @@ data &lt;- as.matrix(iris[,1:4])
 # setup variables as in theory section
 X &lt;- data
 n &lt;- nrow(data)
-rownames(X) &lt;- paste0(&quot;sample&quot;, 1:n)
 
 # center the features
 X &lt;- scale(X, center = T, scale = F)
@@ -481,13 +483,13 @@ pca &lt;- prcomp(X)
 sv &lt;- svd(X)
 
 head(X)</code></pre>
-<pre><code>##         Sepal.Length Sepal.Width Petal.Length Petal.Width
-## sample1   -0.7433333  0.44266667       -2.358  -0.9993333
-## sample2   -0.9433333 -0.05733333       -2.358  -0.9993333
-## sample3   -1.1433333  0.14266667       -2.458  -0.9993333
-## sample4   -1.2433333  0.04266667       -2.258  -0.9993333
-## sample5   -0.8433333  0.54266667       -2.358  -0.9993333
-## sample6   -0.4433333  0.84266667       -2.058  -0.7993333</code></pre>
+<pre><code>##      Sepal.Length Sepal.Width Petal.Length Petal.Width
+## [1,]   -0.7433333  0.44266667       -2.358  -0.9993333
+## [2,]   -0.9433333 -0.05733333       -2.358  -0.9993333
+## [3,]   -1.1433333  0.14266667       -2.458  -0.9993333
+## [4,]   -1.2433333  0.04266667       -2.258  -0.9993333
+## [5,]   -0.8433333  0.54266667       -2.358  -0.9993333
+## [6,]   -0.4433333  0.84266667       -2.058  -0.7993333</code></pre>
 </div>
 <div id="results-of-prcomp" class="section level3">
 <h3>Results of <code>prcomp</code></h3>
@@ -500,20 +502,20 @@ head(pca$rotation)</code></pre>
 ## Petal.Width   0.35828920  0.07548102 -0.54583143  0.7536574</code></pre>
 <pre class="r"><code># projection of X onto principal axes
 head(pca$x)</code></pre>
-<pre><code>##               PC1        PC2         PC3          PC4
-## sample1 -2.684126 -0.3193972  0.02791483  0.002262437
-## sample2 -2.714142  0.1770012  0.21046427  0.099026550
-## sample3 -2.888991  0.1449494 -0.01790026  0.019968390
-## sample4 -2.745343  0.3182990 -0.03155937 -0.075575817
-## sample5 -2.728717 -0.3267545 -0.09007924 -0.061258593
-## sample6 -2.280860 -0.7413304 -0.16867766 -0.024200858</code></pre>
+<pre><code>##            PC1        PC2         PC3          PC4
+## [1,] -2.684126 -0.3193972  0.02791483  0.002262437
+## [2,] -2.714142  0.1770012  0.21046427  0.099026550
+## [3,] -2.888991  0.1449494 -0.01790026  0.019968390
+## [4,] -2.745343  0.3182990 -0.03155937 -0.075575817
+## [5,] -2.728717 -0.3267545 -0.09007924 -0.061258593
+## [6,] -2.280860 -0.7413304 -0.16867766 -0.024200858</code></pre>
 </div>
 <div id="compare-prcomp-and-svd" class="section level3">
 <h3>Compare <code>prcomp</code> and <code>svd</code></h3>
 <pre class="r"><code># don&#39;t compare object attributes
 all_equal &lt;- function(...) all.equal(..., check.attributes = FALSE)
 
-# principal axes (principal directions) 
+# principal axes
 all_equal(pca$rotation, sv$v)
 
 # projections of X onto principal axes
@@ -522,6 +524,7 @@ all_equal(pca$x , sv$u %*% diag(sv$d))
 
 # full data reconstruction
 all_equal(X, pca$x %*% t(pca$rotation))
+all_equal(X, sv$u %*% diag(sv$d) %*% t(sv$v))
 
 # variance decomposition
 all_equal(pca$sdev^2, ((sv$d)^2 /(n-1)))
@@ -531,6 +534,7 @@ all_equal(sum(pca$sdev^2), sum(X^2)/(n-1))
 lambda &lt;- eigen((t(X) %*% X)/(n-1))$values
 all_equal(pca$sdev^2, lambda[lambda&gt;0])</code></pre>
 <pre><code>## [1] TRUE
+## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE
 ## [1] TRUE
@@ -552,27 +556,29 @@ data_approx &lt;-  scale(X_approx, center = -colMeans(data), scale = FALSE)
 all_equal(data_approx, data)</code></pre>
 <pre><code>## [1] &quot;Mean relative difference: 0.01562306&quot;</code></pre>
 </div>
-<div id="loadings-decompose-variance-by-feature" class="section level3">
-<h3>Loadings decompose variance by feature</h3>
+<div id="decompose-pc-variance-by-feature" class="section level3">
+<h3>Decompose PC variance by feature</h3>
 <pre class="r"><code># 1D approximation of the data
+axes &lt;- pca$rotation
 projections &lt;- pca$x
-loadings &lt;- pca$rotation
-X1 &lt;- projections[,1] %*% t(loadings[,1])
+X1 &lt;- projections[,1] %*% t(axes[,1])
 
 # feature-wise variances
 vars &lt;- matrixStats::colVars(X1, useNames = T)
 
 # relative proportions of feature-wise variances 
-# are the squares of the loadings
+# are the squares of the entries of the principal axis
 all_equal(sum(vars), (pca$sdev^2)[1])
-all_equal(vars / sum(vars), loadings[,1]^2)</code></pre>
+all_equal(vars / sum(vars), axes[,1]^2)</code></pre>
 <pre><code>## [1] TRUE
 ## [1] TRUE</code></pre>
 </div>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>[1] <a href="https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca" class="uri">https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca</a></p>
+<p>[1] Strang, G. (2019). <em>Linear algebra and learning from data</em>
+(Vol. 4). Cambridge: Wellesley-Cambridge Press.</p>
+<p>[2] <a href="https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca" class="uri">https://stats.stackexchange.com/questions/134282/relationship-between-svd-and-pca-how-to-use-svd-to-perform-pca</a></p>
 </div>
 
 
